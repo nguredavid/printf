@@ -18,8 +18,7 @@ struct convert
 typedef struct convert conver_t;
 
 /*here goes the main functions*/
-int _putchar(char c);
-int parser(const char *format, conver_t f_list[], va_list arg_list);
+int _putchar(char c)const char *format, conver_t f_list[], va_list arg_list);
 int _printf(const char *format, ...);
 int _write_char(char);
 int print_char(va_list);
