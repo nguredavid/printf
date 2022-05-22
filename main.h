@@ -22,6 +22,8 @@ typedef struct format
 	int (*f)();
 } convert_match;
 
+int _putchar(char c);
+int _printf(const char *format, ...);
 int printf_pointer(va_list val);
 int printf_hex_aux(unsigned long int num);
 int printf_HEX_aux(unsigned int num);
@@ -43,7 +45,6 @@ int _strlenc(const char *s);
 int printf_37(void);
 int printf_char(va_list val);
 int printf_string(va_list val);
-int _putchar(char c);
-int _printf(const char *format, ...);
+
 
 #endif
