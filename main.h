@@ -1,24 +1,32 @@
-#ifndef our_printf
-#define our_printf
-#include <stdio.h>
+#ifndef PRINTF
+#define PRINTF
+#include <unistd.h>
 #include <stdarg.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <limits.h>
+
 /**
- * struct specifier - struct specifier
- * @valid: the valid character.
- * @f: the functions associated.
- *
+ * struct printer - conects format specifier with its corresponding function.
+ * @flag: format specifier.
+ * @function: pointer to @flag especific function.
  */
-typedef struct specifier
+typedef struct printer
 {
-	char *valid;
-	int (*f)(va_list);
-} spec;
-int _printf(const char *format, ...);
-int print_c(va_list args);
-int print_s(va_list args);
-int print_d(va_list args);
-int print_i(va_list args);
+	char flag;
+	int (*function)(va_list);
+} printer_t;
+
 int _putchar(char c);
-int print_percent(va_list args);
-int (*get_func(char x))(va_list args);
+int _printf(const char *format, ...);
+int print_c(va_list arg);
+int print_s(va_list arg);
+int print_i(va_list arg);
+int print_b(va_list arg);
+int print_u(va_list arg);
+int print_o(va_list arg);
+int print_x(va_list arg);
+int print_X(va_list arg);
+int print_r(va_list arg);
+int print_R(va_list arg);
 #endif
