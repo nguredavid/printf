@@ -1,78 +1,45 @@
 #include "main.h"
-
-int (*printer_aux(char flag))(va_list);
-
 /**
- * _printf - produces output according to a format.
- * @format: format specifier.
- * Return: number of characters printed.
+ * _printf - is a function that selects the correct function to print.
+ * @format: identifier to look for.
+ * Return: the length of the string.
  */
-int _printf(const char *format, ...)
+int _printf(const char * const format, ...)
 {
-	va_list arg;
-	int i, printed_chars = 0;
+	convert_match m[] = {
+		{"%s", printf_string}, {"%c", printf_char},
+		{"%%", printf_37},
+		{"%i", printf_int}, {"%d", printf_dec}, {"%r", printf_srev},
+		{"%R", printf_rot13}, {"%b", printf_bin}, {"%u", printf_unsigned},
+		{"%o", printf_oct}, {"%x", printf_hex}, {"%X", printf_HEX},
+		{"%S", printf_exclusive_string}, {"%p", printf_pointer}
+	};
 
+	va_list args;
+	int i = 0, j, len = 0;
+
+	va_start(args, format);
 	if (format == NULL || (format[0] == '%' && format[1] == '\0'))
 		return (-1);
 
-	va_start(arg, format);
-	for (i = 0; format && format[i]; i++)
+Here:
+	while (format[i] != '\0')
 	{
-		if (format[i] != '%')
+		j = 13;
+		while (j >= 0)
 		{
-			_putchar(format[i]);
-			printed_chars++;
+			if (m[j].id[0] == format[i] && m[j].id[1] == format[i + 1])
+			{
+				len += m[j].f(args);
+				i = i + 2;
+				goto Here;
+			}
+			j--;
 		}
-		else if (format[i + 1] == '\0')
-			return (-1);
-		else if (format[i + 1] == '%')
-		{
-			_putchar(format[i]);
-			printed_chars++;
-			i++;
-		}
-		else if (printer_aux(format[i + 1]) != NULL)
-		{
-			printed_chars = printed_chars + printer_aux(format[i + 1])(arg);
-			i++;
-		}
-		else
-		{
-			_putchar(format[i]);
-			printed_chars++;
-		}
+		_putchar(format[i]);
+		len++;
+		i++;
 	}
-	va_end(arg);
-
-	return (printed_chars);
-}
-
-/**
- * printer_aux - auxiliar function for print with a specific format.
- * @flag: format specifier
- * Return: pointer to format function or NULL.
- */
-int (*printer_aux(char flag))(va_list)
-{
-	printer_t arr[] = {
-		{'c', print_c},
-		{'s', print_s},
-		{'i', print_i},
-		{'d', print_i},
-		{'b', print_b},
-		{'u', print_u},
-		{'o', print_o},
-		{'x', print_x},
-		{'X', print_X},
-		{'r', print_r},
-		{'R', print_R},
-		{'\0', NULL}
-	};
-	int i;
-
-	for (i = 0; arr[i].flag != '\0'; i++)
-		if (flag == arr[i].flag)
-			break;
-
-	return (arr[i].function);
+	va_end(args);
+	return (len);
 }
